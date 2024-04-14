@@ -1,4 +1,5 @@
 import random
+import time
 
 # Çakışma sayısını hesaplayan fonksiyon
 def calc_conflicts(board):
@@ -44,6 +45,22 @@ def hill_climbing(board):
 
     return board, current_conflicts, steps
 
+def find_solution():
+    random_starts = 0  # Rastgele başlangıç durumlarının sayısını tutan sayaç
+    while True:
+        # 8 vezir problemi için rastgele bir başlangıç tahtası oluştur
+        initial_board = [random.randint(0, 7) for _ in range(8)]
+        print("Initial board configuration: ", initial_board)
+
+        # Hill Climbing algoritmasıyla çözüm ara
+        solution = hill_climbing(initial_board)
+
+        # Eğer çakışma sayısı 0 ise, ideal çözüm bulunmuştur ve çözümü döndür
+        if solution[1] == 0:
+            return solution, random_starts
+
+        random_starts += 1  # Her yeni rastgele başlangıç durumu için sayaçı artır
+
 # Tahtayı yazdıran fonksiyon
 def print_board(board):
     for i in range(len(board)):
@@ -61,10 +78,15 @@ initial_board = [random.randint(0, 7) for _ in range(8)]
 print("Initial board configuration: ", initial_board)
 
 # Ana fonksiyonu çağır
-solution = hill_climbing(initial_board)
-
+start_time = time.time()
+solution, random_starts = find_solution()
+end_time = time.time()
+elapsed_time = end_time - start_time
 # Çözümü, çakışma sayısını ve adım sayısını yazdır
 print("Final board configuration: ", solution[0])
 print_board(solution[0])
 print("Number of conflicts: ", solution[1])
 print("Number of steps: ", solution[2])
+print("Number of random starts: ", random_starts)
+
+print("Elapsed time: {:.5f} seconds".format(elapsed_time))
