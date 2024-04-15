@@ -1,5 +1,6 @@
 import random
 import time
+import pandas as pd
 
 # Çakışma sayısını hesaplayan fonksiyon
 def calc_conflicts(board):
@@ -73,20 +74,31 @@ def print_board(board):
         print(row)
     print("\n")
 
-# Rastgele bir başlangıç tahtası oluştur
-initial_board = [random.randint(0, 7) for _ in range(8)]
-print("Initial board configuration: ", initial_board)
 
-# Ana fonksiyonu çağır
-start_time = time.time()
-solution, random_starts = find_solution()
-end_time = time.time()
-elapsed_time = end_time - start_time
-# Çözümü, çakışma sayısını ve adım sayısını yazdır
-print("Final board configuration: ", solution[0])
-print_board(solution[0])
-print("Number of conflicts: ", solution[1])
-print("Number of steps: ", solution[2])
-print("Number of random starts: ", random_starts)
+results = pd.DataFrame(columns=["Number of steps", "Number of random starts", "Elapsed time"])
 
-print("Elapsed time: {:.5f} seconds".format(elapsed_time))
+# Kodu 15 kez çalıştır
+for i in range(15):
+    # Rastgele bir başlangıç tahtası oluştur
+    initial_board = [random.randint(0, 7) for _ in range(8)]
+    print("Initial board configuration: ", initial_board)
+
+    # Ana fonksiyonu çağır
+    start_time = time.time()
+    solution, random_starts = find_solution()
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+
+    # Çözümü, çakışma sayısını ve adım sayısını yazdır
+    print("Final board configuration: ", solution[0])
+    print_board(solution[0])
+    print("Number of conflicts: ", solution[1])
+    print("Number of steps: ", solution[2])
+    print("Number of random starts: ", random_starts)
+    print("Elapsed time: {:.5f} seconds".format(elapsed_time))
+
+    # Sonuçları DataFrame'e ekle
+    results.loc[i] = [solution[2], random_starts, elapsed_time]
+
+# Sonuçları yazdır
+print(results)
